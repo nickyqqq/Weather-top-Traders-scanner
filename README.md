@@ -15,12 +15,16 @@ A web dashboard for tracking and analyzing the top performing traders in Polymar
 ### Main Leaderboard
 The leaderboard shows top 20 traders with gold/silver/bronze badges for top 3 performers.
 
+![Leaderboard](images/leaderboard.png)
+
 ### Trader Detail Page
 Click any wallet address to view:
 - Complete trading statistics
 - Full order history (last 100 orders)
 - PnL breakdown
 - Win/loss analysis
+
+![Trader Detail](images/trader_detail.png)
 
 ## Installation
 
@@ -122,3 +126,15 @@ For issues or questions, please open an issue on the GitHub repository.
 ---
 
 **Note**: This dashboard displays demo data for illustration. Real trader tracking requires authenticated API access to Polymarket CLOB.
+
+---
+
+## GitHub Stats
+
+![GitHub stars](https://img.shields.io/github/stars/nickyqqq/Weather-top-Traders-scanner?style=social)
+![GitHub forks](https://img.shields.io/github/forks/nickyqqq/Weather-top-Traders-scanner?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/nickyqqq/Weather-top-Traders-scanner?style=social)
+![GitHub last commit](https://img.shields.io/github/last-commit/nickyqqq/Weather-top-Traders-scanner)
+![GitHub issues](https://img.shields.io/github/issues/nickyqqq/Weather-top-Traders-scanner)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/nickyqqq/Weather-top-Traders-scanner)
+![GitHub](https://img.shields.io/github/license/nickyqqq/Weather-top-Traders-scanner)
