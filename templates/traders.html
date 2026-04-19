@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Weather Traders - Leaderboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        .card-header {
+            background: #fff;
+            border-bottom: 2px solid #667eea;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+        }
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .metric-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .trader-row {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            transition: background 0.2s;
+        }
+        .trader-row:hover {
+            background: #f8f9fa;
+        }
+        .rank-badge {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            color: white;
+        }
+        .rank-gold { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); }
+        .rank-silver { background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%); }
+        .rank-bronze { background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%); }
+        .rank-other { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .wallet-address {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .metric-good { color: #28a745; font-weight: bold; }
+        .metric-warning { color: #ffc107; font-weight: bold; }
+        .metric-bad { color: #dc3545; font-weight: bold; }
+        .sharpe-excellent { color: #28a745; }
+        .sharpe-good { color: #17a2b8; }
+        .sharpe-average { color: #6c757d; }
+        table.table-sm th {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="mb-2">👥 Top Weather Traders</h1>
+            <p class="mb-3">High-Performance Wallets on Polymarket Weather Markets</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Overview Metrics -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="metric-value">{{ total_traders }}</div>
+                    <div class="metric-label">Top Traders Tracked</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="metric-value metric-good">
+                        {{ "%.1f"|format(traders[0].win_rate * 100) }}%
+                    </div>
+                    <div class="metric-label">Best Win Rate</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="metric-value sharpe-excellent">
+                        {{ "%.2f"|format(traders[0].sharpe_ratio) }}
+                    </div>
+                    <div class="metric-label">Highest Sharpe Ratio</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="metric-value">
+                        {{ "{:,}".format((traders|sum(attribute='total_trades'))|int) }}
+                    </div>
+                    <div class="metric-label">Total Trades</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traders Leaderboard -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🏆 Top 20 Weather Traders (Ranked by Sharpe Ratio)</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Wallet</th>
+                                        <th>Trades</th>
+                                        <th>Win Rate</th>
+                                        <th>Sharpe Ratio</th>
+                                        <th>ROI</th>
+                                        <th>Volume</th>
+                                        <th>Avg Bet</th>
+                                        <th>Best City</th>
+                                        <th>Last Active</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for trader in traders %}
+                                    <tr class="trader-row">
+                                        <td>
+                                            {% if trader.rank == 1 %}
+                                            <span class="rank-badge rank-gold">{{ trader.rank }}</span>
+                                            {% elif trader.rank == 2 %}
+                                            <span class="rank-badge rank-silver">{{ trader.rank }}</span>
+                                            {% elif trader.rank == 3 %}
+                                            <span class="rank-badge rank-bronze">{{ trader.rank }}</span>
+                                            {% else %}
+                                            <span class="rank-badge rank-other">{{ trader.rank }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="/traders/{{ trader.address }}" class="wallet-address text-decoration-none">
+                                                {{ trader.address[:8] }}...{{ trader.address[-6:] }}
+                                            </a>
+                                            <br><small class="text-muted">Click for details</small>
+                                        </td>
+                                        <td>
+                                            <strong>{{ trader.total_trades }}</strong>
+                                            <br><small class="text-muted">{{ trader.winning_trades }}W / {{ trader.losing_trades }}L</small>
+                                        </td>
+                                        <td>
+                                            <span class="{% if trader.win_rate >= 0.60 %}metric-good{% elif trader.win_rate >= 0.55 %}metric-warning{% else %}metric-bad{% endif %}">
+                                                {{ "%.1f"|format(trader.win_rate * 100) }}%
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="{% if trader.sharpe_ratio >= 2.0 %}sharpe-excellent{% elif trader.sharpe_ratio >= 1.0 %}sharpe-good{% else %}sharpe-average{% endif %}">
+                                                {{ "%.2f"|format(trader.sharpe_ratio) }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="{% if trader.roi > 10 %}metric-good{% elif trader.roi > 0 %}metric-warning{% else %}metric-bad{% endif %}">
+                                                {{ "%+.1f"|format(trader.roi) }}%
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <strong>${{ "%.0f"|format(trader.total_volume / 1000) }}k</strong>
+                                        </td>
+                                        <td>
+                                            <small>${{ "%.0f"|format(trader.avg_bet_size) }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ trader.best_city }}</span>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">{{ trader.last_trade_date }}</small>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Analysis -->
+        <div class="row mt-4 mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">📊 Performance Distribution</h6>
+                    </div>
+                    <div class="card-body">
+                        <h6>Win Rate Distribution:</h6>
+                        {% set wr_60_plus = traders|selectattr('win_rate', 'ge', 0.60)|list|length %}
+                        {% set wr_55_60 = traders|selectattr('win_rate', 'ge', 0.55)|selectattr('win_rate', 'lt', 0.60)|list|length %}
+                        {% set wr_below_55 = traders|selectattr('win_rate', 'lt', 0.55)|list|length %}
+
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>60%+ Win Rate</span>
+                                <span class="metric-good">{{ wr_60_plus }} traders</span>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar bg-success" style="width: {{ (wr_60_plus / total_traders * 100)|round }}%">
+                                    {{ "%.0f"|format(wr_60_plus / total_traders * 100) }}%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>55-60% Win Rate</span>
+                                <span class="metric-warning">{{ wr_55_60 }} traders</span>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar bg-warning" style="width: {{ (wr_55_60 / total_traders * 100)|round }}%">
+                                    {{ "%.0f"|format(wr_55_60 / total_traders * 100) }}%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Below 55%</span>
+                                <span class="metric-bad">{{ wr_below_55 }} traders</span>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar bg-danger" style="width: {{ (wr_below_55 / total_traders * 100)|round }}%">
+                                    {{ "%.0f"|format(wr_below_55 / total_traders * 100) }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">🎯 Key Insights</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Average Win Rate:</strong>
+                                <span class="float-end metric-good">
+                                    {{ "%.1f"|format((traders|sum(attribute='win_rate') / total_traders) * 100) }}%
+                                </span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Average Sharpe Ratio:</strong>
+                                <span class="float-end sharpe-good">
+                                    {{ "%.2f"|format(traders|sum(attribute='sharpe_ratio') / total_traders) }}
+                                </span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Average ROI:</strong>
+                                <span class="float-end metric-good">
+                                    {{ "%+.1f"|format(traders|sum(attribute='roi') / total_traders) }}%
+                                </span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Total Volume Traded:</strong>
+                                <span class="float-end">${{ "%.0f"|format(traders|sum(attribute='total_volume') / 1000) }}k</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-muted py-4">
+            <p>Last updated: {{ today }}</p>
+            <p><small>🔒 Note: This is demo data for illustration. Real trader tracking requires authenticated API access.</small></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
