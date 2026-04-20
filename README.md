@@ -129,12 +129,6 @@ For issues or questions, please open an issue on the GitHub repository.
 
 ---
 
-## GitHub Stats
+## Star History
 
-![GitHub stars](https://img.shields.io/github/stars/nickyqqq/Weather-top-Traders-scanner?style=social)
-![GitHub forks](https://img.shields.io/github/forks/nickyqqq/Weather-top-Traders-scanner?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/nickyqqq/Weather-top-Traders-scanner?style=social)
-![GitHub last commit](https://img.shields.io/github/last-commit/nickyqqq/Weather-top-Traders-scanner)
-![GitHub issues](https://img.shields.io/github/issues/nickyqqq/Weather-top-Traders-scanner)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/nickyqqq/Weather-top-Traders-scanner)
-![GitHub](https://img.shields.io/github/license/nickyqqq/Weather-top-Traders-scanner)
+[![Star History Chart](https://api.star-history.com/svg?repos=nickyqqq/Weather-top-Traders-scanner&type=Date)](https://star-history.com/#nickyqqq/Weather-top-Traders-scanner&Date)
